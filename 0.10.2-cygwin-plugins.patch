@@ -1,0 +1,82 @@
+--- origsrc/mcabber-0.10.2/mcabber/Makefile.am	2012-12-02 07:27:32.000000000 -0600
++++ src/mcabber-0.10.2/mcabber/Makefile.am	2014-03-30 18:34:33.248878400 -0500
+@@ -34,6 +34,7 @@ endif
+ 
+ if INSTALL_HEADERS
+ mcabber_SOURCES += modules.c modules.h api.h
++mcabber_LDFLAGS = -Wl,--export-all-symbols,--out-implib,libmcabber.dll.a
+ mcabberinclude_HEADERS = main.h roster.h events.h \
+ 			 commands.h compl.h \
+ 			 hbuf.h screen.h logprint.h \
+@@ -54,6 +55,10 @@ mcabberinclude_HEADERS += hgcset.h
+ endif
+ 
+ mcabberincludedir = $(includedir)/mcabber
++
++install-exec-local:
++	$(MKDIR_P) $(DESTDIR)$(libdir)
++	$(INSTALL_DATA) libmcabber.dll.a $(DESTDIR)$(libdir)/libmcabber.dll.a
+ else
+ mcabber_SOURCES += fifo.c fifo.h
+ endif
+--- origsrc/mcabber-0.10.2/mcabber.pc.in	2012-12-02 07:27:32.000000000 -0600
++++ src/mcabber-0.10.2/mcabber.pc.in	2014-03-30 18:35:18.388460300 -0500
+@@ -8,5 +8,5 @@ Description: Modular XMPP client
+ URL: http://mcabber.com
+ Requires.private: glib-2.0 gmodule-2.0 loudmouth-1.0
+ Version: @VERSION@
+-Libs: 
++Libs: -L${libdir} -lmcabber
+ Cflags: -I${includedir} @LIBOTR_CFLAGS@ @GPGME_CFLAGS@
+--- origsrc/mcabber-0.10.2/modules/beep/Makefile.am	2012-12-02 07:27:33.000000000 -0600
++++ src/mcabber-0.10.2/modules/beep/Makefile.am	2014-03-30 18:41:40.205298900 -0500
+@@ -4,8 +4,9 @@ if INSTALL_HEADERS
+ pkglib_LTLIBRARIES = libbeep.la
+ libbeep_la_SOURCES = beep.c
+ libbeep_la_LDFLAGS = -module -avoid-version -shared
++libbeep_la_LDFLAGS += -no-undefined -Wl,$(top_builddir)/mcabber/libmcabber.dll.a
+ 
+-LDADD = $(GLIB_LIBS)
++libbeep_la_LIBADD = $(GLIB_LIBS)
+ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) \
+ 			      $(GLIB_CFLAGS) $(LOUDMOUTH_CFLAGS) \
+                               $(GPGME_CFLAGS) $(LIBOTR_CFLAGS) \
+--- origsrc/mcabber-0.10.2/modules/fifo/Makefile.am	2012-12-02 07:27:33.000000000 -0600
++++ src/mcabber-0.10.2/modules/fifo/Makefile.am	2014-03-30 18:41:06.917395000 -0500
+@@ -3,8 +3,9 @@ if INSTALL_HEADERS
+ pkglib_LTLIBRARIES = libfifo.la
+ libfifo_la_SOURCES = fifo_module.c $(top_srcdir)/mcabber/fifo.c $(top_srcdir)/mcabber/fifo.h
+ libfifo_la_LDFLAGS = -module -avoid-version -shared
++libfifo_la_LDFLAGS += -no-undefined -Wl,$(top_builddir)/mcabber/libmcabber.dll.a
+ 
+-LDADD = $(GLIB_LIBS)
++libfifo_la_LIBADD = $(GLIB_LIBS)
+ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) \
+ 				$(GLIB_CFLAGS) $(LOUDMOUTH_CFLAGS) \
+ 				$(GPGME_CFLAGS) $(LIBOTR_CFLAGS) \
+--- origsrc/mcabber-0.10.2/modules/urlregex/Makefile.am	2012-12-02 07:27:33.000000000 -0600
++++ src/mcabber-0.10.2/modules/urlregex/Makefile.am	2014-03-30 18:41:49.217814400 -0500
+@@ -4,8 +4,9 @@ if INSTALL_HEADERS
+ pkglib_LTLIBRARIES = liburlregex.la
+ liburlregex_la_SOURCES = urlregex.c
+ liburlregex_la_LDFLAGS = -module -avoid-version -shared
++liburlregex_la_LDFLAGS += -no-undefined -Wl,$(top_builddir)/mcabber/libmcabber.dll.a
+ 
+-LDADD = $(GLIB_LIBS)
++liburlregex_la_LIBADD = $(GLIB_LIBS)
+ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) \
+ 			      $(GLIB_CFLAGS) $(LOUDMOUTH_CFLAGS) \
+                               $(GPGME_CFLAGS) $(LIBOTR_CFLAGS) \
+--- origsrc/mcabber-0.10.2/modules/xttitle/Makefile.am	2012-12-02 07:27:33.000000000 -0600
++++ src/mcabber-0.10.2/modules/xttitle/Makefile.am	2014-03-30 18:40:29.851274900 -0500
+@@ -4,8 +4,9 @@ if INSTALL_HEADERS
+ pkglib_LTLIBRARIES = libxttitle.la
+ libxttitle_la_SOURCES = xttitle.c
+ libxttitle_la_LDFLAGS = -module -avoid-version -shared
++libxttitle_la_LDFLAGS += -no-undefined -Wl,$(top_builddir)/mcabber/libmcabber.dll.a
+ 
+-LDADD = $(GLIB_LIBS)
++libxttitle_la_LIBADD = $(GLIB_LIBS)
+ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) \
+               $(GLIB_CFLAGS) $(LOUDMOUTH_CFLAGS) \
+               $(GPGME_CFLAGS) $(LIBOTR_CFLAGS) $(ENCHANT_CFLAGS)

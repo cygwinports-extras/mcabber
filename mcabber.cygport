@@ -1,0 +1,25 @@
+NAME="mcabber"
+VERSION=0.10.2
+RELEASE=1
+CATEGORY="Net"
+SUMMARY="Console Jabber client"
+DESCRIPTION="mcabber is a small Jabber console client that includes features
+such as SASL/SSL/TLS support, MUC (Multi-User Chat) support, history logging,
+command completion, OpenPGP encryption, OTR (Off-the-Record Messaging) support,
+dynamic modules and external action triggers."
+HOMEPAGE="http://mcabber.com/"
+SRC_URI="http://mcabber.com/files/mcabber-${VERSION}.tar.bz2"
+PATCH_URI="0.10.2-cygwin-plugins.patch"
+
+CYGCONF_ARGS="
+	--enable-enchant
+	--enable-gpgme
+	--enable-otr
+"
+
+PKG_NAMES="${NAME} ${NAME}-devel"
+mcabber_CONTENTS="usr/bin/ usr/lib/mcabber/ usr/share/doc/ usr/share/man/ usr/share/mcabber/"
+mcabber_devel_CONTENTS="usr/include/ usr/lib/libmcabber.dll.a usr/lib/pkgconfig/"
+
+DOCS="mcabberrc.example"
+
