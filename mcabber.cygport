@@ -1,6 +1,6 @@
 NAME="mcabber"
 VERSION=0.10.2
-RELEASE=1
+RELEASE=2
 CATEGORY="Net"
 SUMMARY="Console Jabber client"
 DESCRIPTION="mcabber is a small Jabber console client that includes features
@@ -9,7 +9,10 @@ command completion, OpenPGP encryption, OTR (Off-the-Record Messaging) support,
 dynamic modules and external action triggers."
 HOMEPAGE="http://mcabber.com/"
 SRC_URI="http://mcabber.com/files/mcabber-${VERSION}.tar.bz2"
-PATCH_URI="0.10.2-cygwin-plugins.patch"
+PATCH_URI="
+	http://pkgs.fedoraproject.org/cgit/mcabber.git/plain/mcabber_use_libotr4.patch
+	0.10.2-cygwin-plugins.patch
+"
 
 CYGCONF_ARGS="
 	--enable-enchant
@@ -20,6 +23,8 @@ CYGCONF_ARGS="
 PKG_NAMES="${NAME} ${NAME}-devel"
 mcabber_CONTENTS="usr/bin/ usr/lib/mcabber/ usr/share/doc/ usr/share/man/ usr/share/mcabber/"
 mcabber_devel_CONTENTS="usr/include/ usr/lib/libmcabber.dll.a usr/lib/pkgconfig/"
+
+DIFF_EXCLUDES="hgcset.h"
 
 DOCS="mcabberrc.example"
 
